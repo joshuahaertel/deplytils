@@ -1,4 +1,7 @@
-# noinspection PyPep8Naming
+"""Decorators"""
+
+
+# noinspection PyPep8Naming pylint: disable=invalid-name,unused-variable
 class cached_class_property(object):
     """
     Decorator to transform a class method into a class field. The first

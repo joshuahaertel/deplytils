@@ -127,6 +127,7 @@ disable=# print-statement,
         # dict-items-not-iterating,
         # dict-keys-not-iterating,
         # dict-values-not-iterating
+        bad-continuation
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
@@ -226,7 +227,7 @@ redefining-builtins-modules=six.moves,past.builtins,future.builtins
 # ignore-long-lines=^\s*(# )?<?https?://\S+>?$
 
 # Number of spaces of indent required inside a hanging  or continued line.
-indent-after-paren=4
+# indent-after-paren=4
 
 # String used as indentation unit. This is usually "    " (4 spaces) or "\t" (1
 # tab).
@@ -317,7 +318,7 @@ max-spelling-suggestions=4
 
 # Spelling dictionary name. Available dictionaries: none. To make it working
 # install python-enchant package.
-spelling-dict=en_US
+spelling-dict=
 
 # List of comma separated words that should not be checked.
 spelling-ignore-words=PYTHONPATH,

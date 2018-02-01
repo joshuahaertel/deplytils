@@ -5,10 +5,10 @@ from putils.decorators import cached_class_property, class_property
 
 
 # pylint: disable=unused-variable
+# pragma pylint: disable=missing-docstring
 # noinspection PyMissingOrEmptyDocstring
 class TestCachedClassProperty(TestCase):
     """Test Cached Class Property"""
-    # pragma pylint: disable=missing-docstring
     def setUp(self):
         # noinspection PyMissingOrEmptyDocstring
         class TestClass(object):
@@ -52,6 +52,7 @@ class TestCachedClassProperty(TestCase):
         self.test_full_delete_class_property()
 
 
+# pylint: disable=unused-variable
 class TestClassProperty(TestCase):
     def setUp(self):
         # noinspection PyMissingOrEmptyDocstring

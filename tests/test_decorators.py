@@ -1,7 +1,7 @@
 """Test Decorators"""
 from unittest import TestCase
 
-from putils.decorators import cached_class_property
+from putils.decorators import cached_class_property, class_property
 
 
 # pylint: disable=unused-variable
@@ -50,3 +50,28 @@ class TestCachedClassProperty(TestCase):
         self.test_cache_invalidates()
         del self.class_.property
         self.test_full_delete_class_property()
+
+
+class TestClassProperty(TestCase):
+    def setUp(self):
+        # noinspection PyMissingOrEmptyDocstring
+        class TestClass(object):
+            __times_processed = 0
+
+            # pylint: disable=no-self-argument
+            # noinspection PyMethodParameters
+            @class_property
+            def property(cls):
+                cls.__times_processed += 1
+                return cls.__times_processed
+
+        self.test_class = TestClass
+
+    def test_access_class_property(self):
+        self.assertEqual(self.test_class.property, 1)
+        self.assertEqual(self.test_class.property, 2)
+
+    def test_instant_cant_access(self):
+        instance = self.test_class()
+        with self.assertRaises(AssertionError):
+            _ = instance.property

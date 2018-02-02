@@ -1,0 +1,8 @@
+[run]
+omit =
+    # omit local files
+    *local*
+    # omit test files
+    *test*
+    # omit virtualenv files
+    *.virtualenvs*

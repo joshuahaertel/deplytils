@@ -107,8 +107,9 @@ class CoverageContext(object):
 class StrictCoverage(CoverageContext):
     """
     A type of Coverage Context manager that throws errors on exit if
-    a the coverage does not meet the defined threshold
+    the coverage does not meet the defined threshold
     """
+
     def __init__(self, *args, threshold=100, report=True, **kwargs):
         """
         Similar to CoverageContext. In addition to returning a report
@@ -123,14 +124,16 @@ class StrictCoverage(CoverageContext):
         :param kwargs: see CoverageContext init
         """
         assert report, ('Failure to report will result in errors when '
-                        'attempting to comparing a the reported result to '
-                        'the threshold')
+                        'attempting to compare the reported result to '
+                        'the specified threshold')
         super(StrictCoverage, self).__init__(*args, **kwargs)
         self.threshold = threshold
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         """
-        stops coverage and stores coverage data in self.result
+        stops coverage and stores coverage data in self.result.
+        Performs a compare and raises an error if the threshold
+        is not met.
 
         :raises CoverageException: Coverage does not meet threshold
         """

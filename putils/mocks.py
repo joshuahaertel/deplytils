@@ -4,15 +4,17 @@ from coverage import CoverageException
 
 class MockCoverage(object):  # pylint: disable=unused-variable
     """
-    Mock Coverage Object. Aside from testing, it has a more practical
-    use based on the problems that can occur when a Coverage runs
-    inside of Coverage (a coverage inception space time continuum).
-    It matches the interface but fails to run due to the complications
+    Mock Coverage Object. Aside from testing, it has a another use
+    based on the problems that can occur when a Coverage runs inside
+    of Coverage (a coverage inception space time continuum). It
+    matches the interface but fails to run due to the complications
     that can occur.
     """
 
     def __init__(self, report=None):
         """
+        Init the MockCoverage object. For now, it does not accept the
+        same arguments, however, this may be needed in the future.
 
         :param report: value to return in the report
         """

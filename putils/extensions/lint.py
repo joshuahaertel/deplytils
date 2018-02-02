@@ -36,14 +36,20 @@ class ProjectLinter(object):
         self.reporter = reporter
 
     def run(self):
-        """Gathers files and runs the linter"""
+        """
+        Gathers files and runs the linter
+
+        :raises AssertionError: project not 10.0
+        """
         self._walk_dir(self.project_path)
 
         if not self.rc_file:
             self.args.append('--rcfile={}'.format(self.rc_file))
 
         self.args.extend(self.files)
-        Run(self.args, reporter=self.reporter, exit=self.exit)
+        lint = Run(self.args, reporter=self.reporter, exit=self.exit)
+        score = lint.linter.stats['global_note']
+        assert score == 10.0, 'Imperfect score of {:0.2f}'.format(score)
 
     def _walk_dir(self, path):
         """Gathers files"""

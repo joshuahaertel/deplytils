@@ -6,9 +6,8 @@ tests), the release candidate is not ready.
 """
 import os
 import subprocess
-import unittest
-
 import sys
+import unittest
 
 from coverage import Coverage
 
@@ -21,6 +20,7 @@ class Checker(object):
     achieved, and everything passes linting.
     """
     def __init__(self):
+        """Cleans up old coverage data files, if any"""
         self._test_group_errors = 0
         for file_ in os.listdir(os.curdir):
             if '.coverage' in file_:
@@ -42,21 +42,19 @@ class Checker(object):
     def _start_coverage_tests():
         """Start the process to test the CoverageContext"""
         args = ('coverage run --branch -p -m '
-                'unittest discover coverage_tests')
+                'unittest discover -s coverage_tests')
         coverage_tests = subprocess.Popen(
             args.split(' '), stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
         return coverage_tests
 
-    def _run_normal_tests(self):
+    @staticmethod
+    def _run_normal_tests():
         """Run other/normal tests"""
         with CoverageContext(coverage_kwargs=dict(
                 cover_pylib=False, branch=True, config_file='.ncoveragerc',
-                data_suffix=True),
-                report_type='report') as coverage:
+                data_suffix=True)) as coverage:
             tests = unittest.TestProgram(module=None, exit=False, argv=(
-                'normal_tests', 'discover', 'tests'))
-        self.__assert(coverage.result == 100,
-                      'Normal tests not at 100% coverage')
+                'normal_tests', 'discover', '-s', 'tests'))
         coverage.coverage.save()
         return tests
 
@@ -72,9 +70,7 @@ class Checker(object):
 
     def _validate_tests(self, coverage_tests, coverage_tests_output,
                         normal_tests):
-        """Make sure all tests pass
-        :param coverage:
-        """
+        """Make sure all tests pass"""
         normal_test_results = normal_tests.result
         errors = normal_test_results.errors
         failures = normal_test_results.failures
@@ -96,6 +92,7 @@ class Checker(object):
             self._test_group_errors += 1
 
     def _validate_coverage(self):
+        """Make sure there 100% coverage between the two test groups"""
         coverage = Coverage(config_file='.ccoveragerc',)
         coverage.load()
         coverage.combine(strict=True)

@@ -10,7 +10,9 @@ import unittest
 
 import sys
 
-from putils.contexts.coverage import StrictCoverage
+from coverage import Coverage
+
+from putils.contexts.coverage import CoverageContext
 
 
 class Checker(object):
@@ -20,10 +22,9 @@ class Checker(object):
     """
     def __init__(self):
         self._test_group_errors = 0
-        try:
-            os.remove('.coverage')
-        except FileNotFoundError:
-            pass
+        for file_ in os.listdir(os.curdir):
+            if '.coverage' in file_:
+                os.remove(file_)
 
     def run(self):
         """Run all checks"""
@@ -32,26 +33,31 @@ class Checker(object):
         coverage_tests_output = self._output_coverage_tests(coverage_tests)
         self._validate_tests(coverage_tests, coverage_tests_output,
                              normal_tests)
+        if self._test_group_errors != 0:
+            print('Not all test groups passed!', file=sys.stderr)
+            sys.exit(self._test_group_errors)
+        print('Success! All tests passed!')
 
     @staticmethod
     def _start_coverage_tests():
         """Start the process to test the CoverageContext"""
-        args = 'coverage run -a -m unittest discover coverage_tests'
+        args = ('coverage run --branch -p -m '
+                'unittest discover coverage_tests')
         coverage_tests = subprocess.Popen(
             args.split(' '), stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
         return coverage_tests
 
-    @staticmethod
-    def _run_normal_tests():
+    def _run_normal_tests(self):
         """Run other/normal tests"""
-        project_path = os.getenv('PYTHONPATH')
-        config_file = os.path.join(project_path, '.ncoveragerc')
-        with StrictCoverage(
-                coverage_kwargs=dict(cover_pylib=False, branch=True,
-                                     config_file=config_file),
-                report_type='report', silent=True):
+        with CoverageContext(coverage_kwargs=dict(
+                cover_pylib=False, branch=True, config_file='.ncoveragerc',
+                data_suffix=True),
+                report_type='report') as coverage:
             tests = unittest.TestProgram(module=None, exit=False, argv=(
                 'normal_tests', 'discover', 'tests'))
+        self.__assert(coverage.result == 100,
+                      'Normal tests not at 100% coverage')
+        coverage.coverage.save()
         return tests
 
     @staticmethod
@@ -66,7 +72,9 @@ class Checker(object):
 
     def _validate_tests(self, coverage_tests, coverage_tests_output,
                         normal_tests):
-        """Make sure all tests pass"""
+        """Make sure all tests pass
+        :param coverage:
+        """
         normal_test_results = normal_tests.result
         errors = normal_test_results.errors
         failures = normal_test_results.failures
@@ -79,16 +87,19 @@ class Checker(object):
         self.__assert(coverage_tests.returncode == 0 and
                       coverage_tests_output[-1] == b'OK\n',
                       error_template.format('coverage'))
-        if self._test_group_errors != 0:
-            print('Not all test groups passed!', file=sys.stderr)
-            sys.exit(self._test_group_errors)
-        print('Success! All tests passed!')
+        self._validate_coverage()
 
     def __assert(self, condition, error_message):
         """Log errors, but don't quit"""
         if not condition:
             print(error_message, file=sys.stderr)
             self._test_group_errors += 1
+
+    def _validate_coverage(self):
+        coverage = Coverage(config_file='.ccoveragerc',)
+        coverage.load()
+        coverage.combine(strict=True)
+        self.__assert(coverage.report() == 100.0, '100% coverage not achieved')
 
 
 def main():

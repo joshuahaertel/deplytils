@@ -43,7 +43,7 @@ class TestStrictCoverage(BaseCoverage):
     def test_meet_threshold(self):
         coverage.StrictCoverage()
         with coverage.StrictCoverage(coverage_kwargs=dict(
-                config_file='.icoveragerc', source=(self.module_path,)),
+                config_file='.ccoveragerc', source=(self.module_path,)),
                 silent=False, mock_kwargs=dict(report=100.0)):
             importlib.reload(coverage_fixture)
             instance = coverage_fixture.CoverageFixture()
@@ -52,7 +52,7 @@ class TestStrictCoverage(BaseCoverage):
     def test_miss_threshold(self):
         with self.assertRaises(CoverageException):
             with coverage.StrictCoverage(coverage_kwargs=dict(
-                    config_file='.icoveragerc', source=(self.module_path,)),
+                    config_file='.ccoveragerc', source=(self.module_path,)),
                     mock_kwargs=dict(report=80.0)):
                 importlib.reload(coverage_fixture)
                 coverage_fixture.CoverageFixture()

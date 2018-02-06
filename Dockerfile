@@ -22,6 +22,7 @@ RUN apk add --update \
         for rev in '3.6.4' '3.5.4' '3.4.7' '2.7.14'; \
         do \
             pyenv install $rev & \
-        done
+        done && \
+        wait
 
 CMD bash

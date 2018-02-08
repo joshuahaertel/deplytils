@@ -4,7 +4,7 @@ omit =
     *local*
     # omit test files
     *test*
-    # omit virtualenv files
-    *.virtualenvs*
+    # omit env files
+    *.virtualenvs*,*.tox*,*.pyenv*
     # omit coverage files -- causes problems when using coverage
     *coverage*

@@ -1,9 +1,12 @@
+#!/usr/bin/env python
 """
 Script to test release candidates. It performs linting as well as unit
 tests with code coverage. If the linting is not perfect, all tests do
 not pass, and there is not 100% coverage on project files (excluding
 tests), the release candidate is not ready.
 """
+from __future__ import print_function  # pylint: disable=unused-variable
+
 import os
 import subprocess
 import sys
@@ -41,8 +44,8 @@ class Checker(object):
     @staticmethod
     def _start_coverage_tests():
         """Start the process to test the CoverageContext"""
-        args = ('coverage run --branch -p -m '
-                'unittest discover -s coverage_tests')
+        args = ('coverage run --branch --rcfile coverage_tests/.coveragerc '
+                '-p -m unittest discover -s coverage_tests')
         coverage_tests = subprocess.Popen(
             args.split(' '), stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
         return coverage_tests
@@ -51,10 +54,10 @@ class Checker(object):
     def _run_normal_tests():
         """Run other/normal tests"""
         with CoverageContext(coverage_kwargs=dict(
-                cover_pylib=False, branch=True, config_file='.ncoveragerc',
-                data_suffix=True)) as coverage:
-            tests = unittest.TestProgram(module=None, exit=False, argv=(
-                'normal_tests', 'discover', '-s', 'tests'))
+                cover_pylib=False, branch=True, data_suffix=True,
+                config_file='normal/.coveragerc')) as coverage:
+            tests = unittest.TestProgram(module=None, exit=False, argv=[
+                'normal_tests', 'discover', '-s', 'normal'])
         coverage.coverage.save()
         return tests
 
@@ -93,7 +96,7 @@ class Checker(object):
 
     def _validate_coverage(self):
         """Make sure there 100% coverage between the two test groups"""
-        coverage = Coverage(config_file='.ccoveragerc',)
+        coverage = Coverage(config_file='coverage_tests/.coveragerc',)
         coverage.load()
         coverage.combine(strict=True)
         self.__assert(coverage.report() == 100.0, '100% coverage not achieved')

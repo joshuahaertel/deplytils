@@ -2,10 +2,11 @@
 import importlib
 from unittest import TestCase
 
+import six
 from coverage import CoverageException
 
 from putils.contexts import coverage
-from coverage_tests import coverage_fixture
+from tests.coverage_tests import coverage_fixture
 
 
 # pragma pylint: disable=missing-docstring,unused-variable
@@ -15,6 +16,13 @@ class BaseCoverage(TestCase):
     def setUpClass(cls):
         cls.module_path = 'tests.coverage_fixture'
         cls.module_name = '{}.py'.format(cls.module_path)
+
+    @staticmethod
+    def _reload_import():
+        if six.PY2:
+            reload(coverage_fixture)  # pylint: disable=undefined-variable
+        else:
+            importlib.reload(coverage_fixture)  # pylint: disable=no-member
 
 
 class TestCoverageContext(BaseCoverage):
@@ -26,33 +34,31 @@ class TestCoverageContext(BaseCoverage):
         with self.assertRaises(AssertionError):
             with coverage.CoverageContext(
                     report_type='file_report', silent=True, report_kwargs={}):
-                importlib.reload(coverage_fixture)
+                self._reload_import()
 
-    @staticmethod
-    def test_no_report():
+    def test_no_report(self):
         with coverage.CoverageContext(report=False):
-            importlib.reload(coverage_fixture)
+            self._reload_import()
 
-    @staticmethod
-    def test_silent_report():
+    def test_silent_report(self):
         with coverage.CoverageContext(silent=True):
-            importlib.reload(coverage_fixture)
+            self._reload_import()
 
 
 class TestStrictCoverage(BaseCoverage):
     def test_meet_threshold(self):
-        coverage.StrictCoverage()
-        with coverage.StrictCoverage(coverage_kwargs=dict(
-                config_file='.ccoveragerc', source=(self.module_path,)),
+        coverage.StrictCoverage(100)
+        with coverage.StrictCoverage(100, coverage_kwargs=dict(
+                config_file='.coveragerc', source=(self.module_path,)),
                 silent=False, mock_kwargs=dict(report=100.0)):
-            importlib.reload(coverage_fixture)
+            self._reload_import()
             instance = coverage_fixture.CoverageFixture()
             instance.run()
 
     def test_miss_threshold(self):
         with self.assertRaises(CoverageException):
-            with coverage.StrictCoverage(coverage_kwargs=dict(
-                    config_file='.ccoveragerc', source=(self.module_path,)),
+            with coverage.StrictCoverage(100, coverage_kwargs=dict(
+                    config_file='.coveragerc', source=(self.module_path,)),
                     mock_kwargs=dict(report=80.0)):
-                importlib.reload(coverage_fixture)
+                self._reload_import()
                 coverage_fixture.CoverageFixture()

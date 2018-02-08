@@ -10,7 +10,7 @@ class TestLintExtensions(TestCase):
     """Test Lint Extensions"""
 
     # pragma pylint: disable=missing-docstring,no-self-use
-    def test_no_path(self):
+    def test_putils(self):
         """Actually testing our code base :)"""
         with warnings.catch_warnings():
             warnings.filterwarnings("ignore", category=DeprecationWarning)
@@ -23,4 +23,4 @@ class TestLintExtensions(TestCase):
             warnings.filterwarnings("ignore", category=DeprecationWarning)
             warnings.filterwarnings(
                 "ignore", category=PendingDeprecationWarning)
-            ProjectLinter('tests', '.pylintrc').run()
+            ProjectLinter('normal', '.pylintrc').run()

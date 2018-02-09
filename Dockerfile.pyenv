@@ -1,0 +1,23 @@
+FROM alpine:latest
+MAINTAINER Joshua Haertel <josh.haertel@gmail.com>
+
+RUN apk add --update \
+        curl \
+        ca-certificates \
+        bash \
+        git \
+        openssl-dev \
+        readline-dev \
+        bzip2-dev \
+        sqlite-dev \
+        ncurses-dev \
+        linux-headers \
+        build-base && \
+    curl -L https://raw.githubusercontent.com/pyenv/pyenv-installer/master/bin/pyenv-installer | bash && \
+    touch ~/.bashrc && \
+    echo 'export PATH="/root/.pyenv/bin:$PATH"' >> ~/.bashrc && \
+    echo 'eval "$(pyenv init -)"' >> ~/.bashrc && \
+    echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.bashrc && \
+    echo -e "\nPYENV_REV=\"$(date)\"" >> ~/.bashrc
+
+CMD bash

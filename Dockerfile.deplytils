@@ -1,0 +1,12 @@
+FROM pyenv:latest
+MAINTAINER Joshua Haertel <josh.haertel@gmail.com>
+
+RUN source ~/.bashrc && \
+    for rev in '3.6.4' '2.7.14' '3.5.5' '3.4.8'; \
+    do \
+        pyenv install $rev & \
+    done && wait && \
+    pyenv global 3.6.4 2.7.14 3.5.5 3.4.8 && \
+    pip install tox==2.9.1
+
+CMD bash

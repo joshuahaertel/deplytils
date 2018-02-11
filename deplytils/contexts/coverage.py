@@ -1,7 +1,9 @@
 """Context Managers"""
+from __future__ import absolute_import  # pylint: disable=unused-variable
+
 from coverage import CoverageException, Coverage
 
-from putils.mocks import MockCoverage
+from deplytils.mocks import MockCoverage
 
 
 class CoverageContext(object):
@@ -110,7 +112,7 @@ class StrictCoverage(CoverageContext):
     the coverage does not meet the defined threshold
     """
 
-    def __init__(self, *args, threshold=100, report=True, **kwargs):
+    def __init__(self, threshold, *args, **kwargs):
         """
         Similar to CoverageContext. In addition to returning a report
         result, it will throw an error if the coverage threshold is
@@ -123,9 +125,10 @@ class StrictCoverage(CoverageContext):
                 for this class to work properly
         :param kwargs: see CoverageContext init
         """
+        report = kwargs.setdefault('report', True)
         assert report, ('Failure to report will result in errors when '
-                        'attempting to compare the reported result to '
-                        'the specified threshold')
+                        'attempting to compare the reported result to the '
+                        'specified threshold')
         super(StrictCoverage, self).__init__(*args, **kwargs)
         self.threshold = threshold
 

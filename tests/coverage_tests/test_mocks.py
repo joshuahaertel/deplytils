@@ -3,7 +3,7 @@ from unittest import TestCase
 
 from coverage import CoverageException
 
-from putils.mocks import MockCoverage
+from deplytils.mocks import MockCoverage
 
 
 # pragma pylint: disable=missing-docstring

@@ -57,7 +57,7 @@ class ProjectLinter(object):
             if '__init__.py' not in files and root != self.project_path:
                 continue
 
-            for file in files:
-                is_not_processable = re.search(r'local|.*(?<!\.py)$', file)
+            for file_ in files:
+                is_not_processable = re.search(r'local|.*(?<!\.py)$', file_)
                 if not is_not_processable:
-                    self.files.append(os.path.join(root, file))
+                    self.files.append(os.path.join(root, file_))

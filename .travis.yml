@@ -1,0 +1,13 @@
+language: python
+python:
+  - "3.6.4"
+  - "2.7.14"
+  - "3.5.5"
+  - "3.4"
+install:
+  - pip install -r requirements.txt six==1.11.0
+env:
+  - PYTHONPATH=$TRAVIS_BUILD_DIR
+script:
+  - cd tests/
+  - ./run.py

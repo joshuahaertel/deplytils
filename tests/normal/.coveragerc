@@ -5,6 +5,6 @@ omit =
     # omit test files
     *test*
     # omit env files
-    *.virtualenvs*,*.tox*,*.pyenv*
+    *virtualenv*,*.tox*,*.pyenv*
     # omit coverage files -- causes problems when using coverage
     *coverage*

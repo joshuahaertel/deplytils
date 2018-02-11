@@ -23,4 +23,4 @@ class TestLintExtensions(TestCase):
             warnings.filterwarnings("ignore", category=DeprecationWarning)
             warnings.filterwarnings(
                 "ignore", category=PendingDeprecationWarning)
-            ProjectLinter('normal', '.pylintrc').run()
+            ProjectLinter('../putils', '.pylintrc').run()

@@ -1,7 +1,7 @@
 """Test Decorators"""
 from unittest import TestCase
 
-from putils.decorators import cached_class_property, class_property
+from deplytils.decorators import cached_class_property, class_property
 
 
 # pylint: disable=unused-variable

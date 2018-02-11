@@ -5,7 +5,7 @@ from unittest import TestCase
 import six
 from coverage import CoverageException
 
-from putils.contexts import coverage
+from deplytils.contexts import coverage
 from tests.coverage_tests import coverage_fixture
 
 

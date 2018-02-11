@@ -14,7 +14,7 @@ import unittest
 
 from coverage import Coverage
 
-from putils.contexts.coverage import CoverageContext
+from deplytils.contexts.coverage import CoverageContext
 
 
 class Checker(object):

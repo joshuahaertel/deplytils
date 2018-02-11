@@ -3,7 +3,7 @@ from __future__ import absolute_import  # pylint: disable=unused-variable
 
 from coverage import CoverageException, Coverage
 
-from putils.mocks import MockCoverage
+from deplytils.mocks import MockCoverage
 
 
 class CoverageContext(object):

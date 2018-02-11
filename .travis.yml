@@ -6,7 +6,7 @@ python:
   - "3.4.7"
 # command to install dependencies
 install:
-  - pip install -r requirements.txt
+  - pip install -r requirements.txt six
 # command to run tests
 script:
   - export PYTHONPATH="$PWD" && cd tests/ && ./run.py

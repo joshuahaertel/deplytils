@@ -49,16 +49,17 @@ class TestStrictCoverage(BaseCoverage):
     def test_meet_threshold(self):
         coverage.StrictCoverage(100)
         with coverage.StrictCoverage(100, coverage_kwargs=dict(
-                config_file='.coveragerc', source=(self.module_path,)),
-                silent=False, mock_kwargs=dict(report=100.0)):
+                config_file='coverage_tests/.coveragerc',
+                source=(self.module_path,)), silent=False, mock_kwargs=dict(
+            report=100.0)):
             self._reload_import()
             instance = coverage_fixture.CoverageFixture()
             instance.run()
 
     def test_miss_threshold(self):
         with self.assertRaises(CoverageException):
-            with coverage.StrictCoverage(100, coverage_kwargs=dict(
-                    config_file='.coveragerc', source=(self.module_path,)),
-                    mock_kwargs=dict(report=80.0)):
+            with coverage.StrictCoverage(
+                    100, mock_kwargs=dict(report=80.0), coverage_kwargs=dict(
+                        source=(self.module_path,))):
                 self._reload_import()
                 coverage_fixture.CoverageFixture()
